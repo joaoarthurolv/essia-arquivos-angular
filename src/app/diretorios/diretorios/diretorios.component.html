@@ -1,0 +1,92 @@
+<mat-card>
+  <mat-card-content>
+    <mat-toolbar color="primary">
+      <span>Diretórios e Arquivos</span>
+    </mat-toolbar>
+
+    <section>
+      <button mat-raised-button (click)="addNodeRoot()">Adicionar diretório à raiz</button>
+      <button mat-raised-button disabled>Adicionar arquivo à raiz</button>
+    </section>
+
+    <div *ngIf="diretorios$ | async as diretorios; else loading">
+      <mat-tree #tree [dataSource]="diretorios.diretorios" [childrenAccessor]="childrenAccessor" class="example-tree">
+        <!--
+        <mat-tree-node *matTreeNodeDef="let node">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="folder_shared"></mat-icon>
+          <p hidden>{{node.idDiretorio}}</p>
+          {{node.nomeDiretorio}}
+          <!-- Action buttons
+          <button mat-icon-button (click)="addNode(node)">
+            <mat-icon>add</mat-icon> <!-- Add icon
+          </button>
+          <button mat-icon-button (click)="editNode(node)">
+            <mat-icon>edit</mat-icon> <!-- Edit icon
+          </button>
+          <button mat-icon-button (click)="deleteNode(node)">
+            <mat-icon>delete</mat-icon> <!-- Delete icon
+          </button>
+        </mat-tree-node>
+                <mat-tree-node *matTreeNodeDef="let file of diretorios.arquivos">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="folder_shared"></mat-icon>
+          <p hidden>{{file.nomeArquivo}}</p>
+          {{file.nomeArquivo}}
+          <!-- Action buttons
+        </mat-tree-node> -->
+
+        <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodeToggle
+          [cdkTreeNodeTypeaheadLabel]="node.nomeDiretorio">
+          <div class="mat-tree-node">
+            <mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.nomeDiretorio">
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{tree.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </mat-icon-button>
+            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="folder_shared"></mat-icon>
+            {{node.nomeDiretorio}}
+
+            <!-- Action buttons -->
+            <button mat-icon-button (click)="addNode(node)">
+              <mat-icon>create_new_folder</mat-icon> <!-- Add icon -->
+            </button>
+            <!-- Action buttons -->
+            <button mat-icon-button (click)="addFile(node)">
+              <mat-icon>note_add</mat-icon> <!-- Add icon -->
+            </button>
+            <button mat-icon-button (click)="editNode(node)">
+              <mat-icon>edit</mat-icon> <!-- Edit icon -->
+            </button>
+            <button mat-icon-button (click)="deleteNode(node)">
+              <mat-icon>delete</mat-icon> <!-- Delete icon -->
+            </button>
+          </div>
+
+          <div *ngIf="tree.isExpanded(node) && node.arquivos && node.arquivos.length > 0" role="group">
+            <mat-tree-node *ngFor="let file of node.arquivos">
+              <mat-icon>insert_drive_file</mat-icon> {{ file.nomeArquivo }}
+
+              <button mat-icon-button (click)="editFile(file)">
+                <mat-icon>edit</mat-icon> <!-- Edit icon -->
+              </button>
+              <button mat-icon-button (click)="deleteFile(file)">
+                <mat-icon>delete</mat-icon> <!-- Delete icon -->
+              </button>
+            </mat-tree-node>
+          </div>
+
+          <div [class.example-tree-invisible]="!tree.isExpanded(node)" role="group">
+            <ng-container matTreeNodeOutlet></ng-container>
+          </div>
+        </mat-nested-tree-node>
+
+      </mat-tree>
+    </div>
+
+    <ng-template #loading>
+      <div class="loading-spinner">
+        <mat-spinner></mat-spinner>
+      </div>
+    </ng-template>
+
+  </mat-card-content>
+</mat-card>
